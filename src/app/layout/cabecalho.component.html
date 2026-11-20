@@ -1,0 +1,73 @@
+<header class="cabecalho">
+  <div class="conteiner barra">
+    <a routerLink="/" class="marca">
+      @if (!logoFalhou()) {
+        <!-- Arquivo oficial da marca Itaú: public/marca/itau-logo.svg (ver docs/marca.md). Sem redesenho nem recolor. -->
+        <img src="marca/itau-logo.svg" alt="Itaú" class="logo" width="48" height="48" (error)="logoFalhou.set(true)">
+      } @else {
+        <span class="logo-texto">Itaú</span>
+      }
+      <span class="nome-site">COE Quality IA</span>
+      <span class="sr-only">, página inicial</span>
+    </a>
+
+    <a routerLink="/" class="botao botao--secundario botao-inicio">
+      <app-icone nome="inicio" />
+      <span>Início</span>
+    </a>
+
+    <button type="button" id="botao-menu-movel" class="botao botao--secundario botao-movel"
+            [attr.aria-expanded]="menuMovelAberto()" aria-controls="navegacao-principal" (click)="alternarMovel()">
+      <app-icone [nome]="menuMovelAberto() ? 'fechar' : 'menu'" />
+      <span>Menu</span>
+    </button>
+
+    <nav id="navegacao-principal" aria-label="Principal" class="navegacao" [class.navegacao--aberta]="menuMovelAberto()">
+      <ul class="lista-menus">
+        @for (menu of menus; track menu.id) {
+          <li class="item-menu" (focusout)="aoSairDoMenu($event, menu.id)">
+            <button type="button" class="botao-menu" [id]="'botao-' + menu.id"
+                    [class.botao-menu--atual]="secaoAtual(menu.id)"
+                    [attr.aria-expanded]="aberto() === menu.id"
+                    [attr.aria-controls]="'painel-' + menu.id"
+                    (click)="alternar(menu.id)">
+              {{ menu.rotulo }}
+              @if (secaoAtual(menu.id)) { <span class="sr-only">(seção atual)</span> }
+              <app-icone [nome]="aberto() === menu.id ? 'subiu' : 'seta-baixo'" [tamanho]="18" />
+            </button>
+            <div class="painel" [id]="'painel-' + menu.id" [hidden]="aberto() !== menu.id">
+              <ul>
+                @if (menu.id !== 'especificacoes') {
+                  <li>
+                    <a [routerLink]="'/' + menu.id" routerLinkActive="link--atual" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" class="link-painel">
+                      <span class="link-titulo">Visão geral de {{ menu.rotulo }}</span>
+                    </a>
+                  </li>
+                }
+                @for (item of menu.itens; track item.rota) {
+                  <li>
+                    <a [routerLink]="item.rota" routerLinkActive="link--atual" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" class="link-painel">
+                      <span class="link-titulo">{{ item.rotulo }}</span>
+                      @if (item.descricao) { <span class="link-descricao">{{ item.descricao }}</span> }
+                    </a>
+                  </li>
+                }
+              </ul>
+            </div>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <div class="usuario">
+      @if (auth.usuario(); as u) {
+        <span class="saudacao">Olá, {{ u.nome }}</span>
+        @if (!auth.modoDemonstracao()) {
+          <button type="button" class="botao botao--secundario" (click)="auth.sair()">
+            <app-icone nome="sair" /><span>Sair</span>
+          </button>
+        }
+      }
+    </div>
+  </div>
+</header>

@@ -1,0 +1,34 @@
+# CI do COE Quality IA: valida conteúdo e tokens, compila e roda os testes de acessibilidade e navegação.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build (gera o índice de conteúdo e verifica os tokens)
+        run: npm run build
+      - name: Navegadores do Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Testes E2E + axe (WCAG 2.2 AA)
+        run: npm run e2e
+        env:
+          CI: "true"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: resultados
+          path: |
+            resultados/
+            e2e/test-results/
+          if-no-files-found: ignore

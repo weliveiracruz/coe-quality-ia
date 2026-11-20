@@ -1,0 +1,16 @@
+{
+  "azure": {
+    "clientId": "",
+    "tenantId": "",
+    "redirectUri": ""
+  },
+  "repositorio": {
+    "url": "https://github.com/weliveiracruz/coe-quality-ia",
+    "ramo": "main",
+    "pastaEspecificacoes": "public/conteudo/especificacoes"
+  },
+  "contatoCoe": {
+    "rotulo": "Canal do COE Quality IA",
+    "url": ""
+  }
+}

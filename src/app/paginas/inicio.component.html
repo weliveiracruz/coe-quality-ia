@@ -1,0 +1,128 @@
+<div class="conteiner">
+  <section class="boas-vindas" aria-labelledby="titulo-inicio">
+    <p class="sobretitulo">Capability compartilhada da RT</p>
+    <h1 id="titulo-inicio">COE Quality IA</h1>
+    <p class="proposito">Engenharia de qualidade, inteligência artificial e confiabilidade para as squads entregarem com mais qualidade,
+      detectarem problemas mais cedo e usarem IA para eliminar trabalho operacional.</p>
+    @if (auth.usuario(); as u) { <p class="ola">Boas-vindas, {{ u.nome }}.</p> }
+  </section>
+
+  <!-- ===================== DASHBOARD DE USO ===================== -->
+  <section aria-labelledby="titulo-uso" class="bloco">
+    <h2 id="titulo-uso">Uso da solução</h2>
+    @if (uso(); as u) {
+      <p class="nota">Últimos {{ u.periodo_dias }} dias, comparados aos {{ u.periodo_dias }} dias anteriores. Atualizado em {{ data(u.atualizado_em) }}.</p>
+      @if (u.exemplo) { <p class="aviso">Dados de exemplo. Em produção, o pipeline gera este painel a partir do login (Azure) e do JSON de métricas do CoE Test Framework.</p> }
+
+      <ul class="indicadores">
+        @for (i of u.indicadores; track i.id) {
+          <li class="cartao indicador">
+            <span class="valor">{{ num(i.valor) }}</span>
+            <span class="rotulo">{{ i.rotulo }}</span>
+            <span class="variacao" [class]="'variacao variacao--' + variacao(i).sentido">
+              @if (variacao(i).sentido !== 'igual') { <app-icone [nome]="variacao(i).sentido" [tamanho]="16" /> }
+              {{ variacao(i).texto }}
+            </span>
+          </li>
+        }
+      </ul>
+
+      <div class="grade-dupla">
+        <figure class="cartao grafico">
+          <figcaption><h3>Acessos por semana</h3></figcaption>
+          <svg viewBox="0 0 560 220" role="img" [attr.aria-label]="resumoGrafico()" class="barras">
+            <line x1="40" y1="190" x2="550" y2="190" class="eixo" />
+            @for (s of u.acessos_semana; track s.semana; let idx = $index) {
+              <g>
+                <rect [attr.x]="52 + idx * (480 / u.acessos_semana.length)" [attr.y]="190 - alturaBarra(s.acessos)"
+                      [attr.width]="(480 / u.acessos_semana.length) - 16" [attr.height]="alturaBarra(s.acessos)" rx="4" class="barra" />
+                <text [attr.x]="52 + idx * (480 / u.acessos_semana.length) + ((480 / u.acessos_semana.length) - 16) / 2"
+                      [attr.y]="182 - alturaBarra(s.acessos)" text-anchor="middle" class="rotulo-valor">{{ num(s.acessos) }}</text>
+                <text [attr.x]="52 + idx * (480 / u.acessos_semana.length) + ((480 / u.acessos_semana.length) - 16) / 2"
+                      y="210" text-anchor="middle" class="rotulo-eixo">{{ dia(s.semana) }}</text>
+              </g>
+            }
+          </svg>
+          <details>
+            <summary>Ver os dados do gráfico em tabela</summary>
+            <table>
+              <caption class="sr-only">Acessos por semana</caption>
+              <thead><tr><th scope="col">Semana iniciada em</th><th scope="col" class="numero">Acessos</th></tr></thead>
+              <tbody>
+                @for (s of u.acessos_semana; track s.semana) {
+                  <tr><td>{{ dia(s.semana) }}</td><td class="numero">{{ num(s.acessos) }}</td></tr>
+                }
+              </tbody>
+            </table>
+          </details>
+        </figure>
+
+        <div class="cartao">
+          <h3 id="titulo-squads">Uso por squad</h3>
+          <div class="rolavel" role="region" aria-labelledby="titulo-squads" tabindex="0">
+            <table>
+              <thead>
+                <tr><th scope="col">Squad</th><th scope="col">Área</th><th scope="col" class="numero">Acessos</th><th scope="col">Nível no framework</th></tr>
+              </thead>
+              <tbody>
+                @for (s of u.squads; track s.squad) {
+                  <tr>
+                    <th scope="row">{{ s.squad }}</th>
+                    <td>{{ s.area }}</td>
+                    <td class="numero">{{ num(s.acessos) }}</td>
+                    <td>{{ s.nivel }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    } @else if (erroUso()) {
+      <p class="aviso">Os dados de uso não estão disponíveis agora. Tente de novo mais tarde.</p>
+    } @else {
+      <p role="status">Carregando dados de uso…</p>
+    }
+  </section>
+
+  <!-- ===================== NOVIDADES ===================== -->
+  <section aria-labelledby="titulo-novidades" class="bloco">
+    <h2 id="titulo-novidades">Novidades</h2>
+    <ul class="novidades">
+      @for (n of novidades(); track n.rota) {
+        <li class="cartao novidade">
+          <div class="cabeca">
+            <span [class]="'tag tag--' + n.area">{{ rotuloArea(n.area) }}</span>
+            <span class="tipo">{{ n.tipo === 'especificacao' ? 'Especificação' : 'Novidade' }}</span>
+            <span class="data">{{ data(n.data) }}</span>
+          </div>
+          <h3><a [routerLink]="n.rota">{{ n.titulo }}</a></h3>
+          <p>{{ n.resumo }}</p>
+        </li>
+      } @empty {
+        <li>Nenhuma novidade publicada ainda.</li>
+      }
+    </ul>
+    <a routerLink="/especificacoes" class="botao botao--secundario">Ver todas as especificações</a>
+  </section>
+
+  <!-- ===================== ATALHOS ===================== -->
+  <section aria-labelledby="titulo-atalhos" class="bloco">
+    <h2 id="titulo-atalhos">Por onde começar</h2>
+    <ul class="atalhos">
+      <li class="cartao atalho atalho--ia">
+        <h3><a routerLink="/inteligencia-artificial">Inteligência Artificial</a></h3>
+        <p>AI Quality Lab, avaliação de ferramentas de IA, observabilidade inteligente e Knowledge Hub.</p>
+      </li>
+      <li class="cartao atalho atalho--qualidade">
+        <h3><a routerLink="/qualidade">Qualidade</a></h3>
+        <p>Quality Engineering Kit, baseline, scorecard, DoD e testes não funcionais.</p>
+      </li>
+      <li class="cartao atalho atalho--indicadores">
+        <h3><a routerLink="/indicadores">Indicadores</a></h3>
+        <p>Metodologia, catálogo de métricas, qualidade de dados, SLIs e SLOs.</p>
+      </li>
+    </ul>
+    <a routerLink="/sobre/missoes" class="botao">Solicitar missão com o COE</a>
+  </section>
+</div>

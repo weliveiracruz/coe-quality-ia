@@ -1,0 +1,8 @@
+# Revisores das especificações e do conteúdo por área.
+# Troque os usuários abaixo pelos revisores de cada área (IA, Qualidade, Indicadores).
+*                                        @weliveiracruz
+/public/conteudo/paginas/inteligencia-artificial/  @weliveiracruz
+/public/conteudo/paginas/qualidade/                @weliveiracruz
+/public/conteudo/paginas/indicadores/              @weliveiracruz
+/public/conteudo/especificacoes/                   @weliveiracruz
+/src/styles/tokens.css                             @weliveiracruz
