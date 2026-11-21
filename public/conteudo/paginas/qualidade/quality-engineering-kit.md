@@ -23,4 +23,4 @@ O primeiro componente do kit é o CoE Test Framework. Ele traz:
 - pipelines no GitHub Actions com SonarQube
 - contratos, suítes transversais (LGPD, resiliência, acessibilidade) e o portal de adoção
 
-Veja a [especificação do CoE Test Framework](/especificacoes/coe-test-framework).
+Baixe o pacote e veja como usar na [página do CoE Test Framework](/qualidade/coe-test-framework).

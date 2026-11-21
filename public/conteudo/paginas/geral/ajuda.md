@@ -8,7 +8,7 @@ rota: /ajuda
 
 ## Navegar
 - O logo do Itaú e o botão **Início** levam à página inicial em qualquer página.
-- Os menus **Inteligência Artificial**, **Qualidade**, **Indicadores**, **Especificações** e **Sobre o COE** abrem com clique, Enter ou Espaço. Esc fecha o menu.
+- Os menus **Inteligência Artificial**, **Qualidade**, **Indicadores** e **Sobre o COE** abrem com clique, Enter ou Espaço. Esc fecha o menu.
 - No celular, use o botão **Menu**.
 - A trilha no alto de cada página mostra onde você está.
 

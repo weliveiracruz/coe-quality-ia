@@ -1,0 +1,16 @@
+{
+  "_comentario": "Dependências E2E do CoE (Angular e React). Mescle em devDependencies do projeto.",
+  "scripts": {
+    "e2e:coe": "playwright test -c coe-tests/e2e/playwright.config.ts",
+    "e2e:coe:demo": "COE_DEMO=1 playwright test -c coe-tests/e2e/playwright.config.ts",
+    "lighthouse:coe": "lhci autorun --config=coe-tests/e2e/lighthouserc.json"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "@lhci/cli": "^0.14.0",
+    "@playwright/test": "^1.49.1",
+    "ajv": "^8.17.1",
+    "allure-playwright": "^3.0.7",
+    "yaml": "^2.6.0"
+  }
+}

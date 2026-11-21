@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 
 export interface ConfigSite {
   azure: { clientId: string; tenantId: string; redirectUri?: string };
-  repositorio: { url: string; ramo: string; pastaEspecificacoes: string };
+  repositorio: { url: string; ramo: string };
   contatoCoe: { rotulo: string; url: string };
 }
 
 const PADRAO: ConfigSite = {
   azure: { clientId: '', tenantId: '' },
-  repositorio: { url: '', ramo: 'main', pastaEspecificacoes: 'public/conteudo/especificacoes' },
+  repositorio: { url: '', ramo: 'main' },
   contatoCoe: { rotulo: 'Canal do COE Quality IA', url: '' },
 };
 

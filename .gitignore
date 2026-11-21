@@ -46,3 +46,11 @@ resultados/
 e2e/test-results/
 test-results/
 public/conteudo/indice.json
+
+# CoE Test Framework (gerados pelos testes)
+artefatos/
+allure-results/
+reports/
+.stryker-tmp/
+coe-tests/artefatos/
+coe-tests/resultados/

@@ -1,0 +1,33 @@
+# MODELO de perfil para cadastrar uma nova plataforma web.
+# 1. Copie para platforms/web/perfis/<id>.yml   2. Preencha   3. Adicione o id em perfis_web no coe-test.yml da squad.
+# Nenhuma mudança no framework é necessária. O portal do CoE também gera este arquivo pelo formulário.
+id: nova-plataforma            # minúsculas e hífen
+nome: Nova Plataforma
+frameworks: [angular]          # angular | react
+ambientes:
+  hml:
+    url: https://nova-plataforma-hml.exemplo.itau
+    rota_pesquisa: /pesquisa
+  # Opcional: a aplicação servida no próprio runner, sem ambiente (estagios.e2e.precisa_ambiente: false no coe-test.yml).
+  # Usado com COE_AMBIENTE=local; o Playwright sobe o servidor com o comando abaixo, na raiz do projeto.
+  # local:
+  #   url: http://localhost:4300
+  #   rota_pesquisa: /
+  #   servidor: npx http-server dist/<app>/browser -p 4300 -s --proxy http://localhost:4300?
+autenticacao:
+  tipo: nenhuma                # nenhuma | token-servico | usuario-teste
+  pagina_login: /login
+  seletores:
+    usuario: "[data-testid=login-usuario]"
+    senha: "[data-testid=login-senha]"
+    entrar: "[data-testid=login-entrar]"
+navegadores: [chromium, firefox, webkit]
+viewport_padrao: { width: 1366, height: 768 }
+viewports_extras: []
+analytics:
+  ga4: ["google-analytics.com/g/collect"]
+  fullstory: ["rs.fullstory.com/rec/bundle"]
+  bff: ["/bff/pesquisa/v1/respostas"]
+visual:
+  limiar_diferenca_pct: 0.2
+  mascarar: []

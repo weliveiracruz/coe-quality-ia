@@ -1,0 +1,29 @@
+# Exemplo: BFF Kotlin. Integração só com Testcontainers/WireMock => roda fora da janela.
+versao: 1
+framework_versao: v1
+squad:
+  nome: Squad Plataforma Pesquisa
+  nivel_alvo: ouro
+produto: bff-kotlin
+stack: kotlin-bff
+camadas:
+  mutacao: true
+  performance: true
+  dast: true
+  resiliencia: true
+  qualidade_dados: true
+  acessibilidade: false
+estagios:
+  integracao: { precisa_ambiente: false }
+ambientes:
+  hml:
+    url: https://bff-pesquisa-hml.exemplo.itau
+    auth: token-servico
+slos:
+  p95_ms: 300
+  p99_ms: 800
+  taxa_erro_max: 0.005
+  rps_alvo: 200
+catalogo:
+  implementacoes:
+    servico: [coe-tests]

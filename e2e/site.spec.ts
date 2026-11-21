@@ -1,4 +1,4 @@
-// Testes do site COE Quality IA: navegação, menus expansíveis, conteúdo, especificações e WCAG 2.2 AA com axe.
+// Testes do site COE Quality IA: navegação, menus expansíveis, conteúdo e WCAG 2.2 AA com axe.
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
@@ -6,7 +6,7 @@ import path from 'node:path';
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const indice = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../public/conteudo/indice.json'), 'utf8'));
-const ROTAS: string[] = ['/', '/inteligencia-artificial', '/qualidade', '/indicadores', '/sobre', '/especificacoes', ...indice.documentos.filter((d: any) => d.tipo !== 'novidade').map((d: any) => d.rota)];
+const ROTAS: string[] = ['/', '/inteligencia-artificial', '/qualidade', '/indicadores', '/sobre', ...indice.documentos.filter((d: any) => d.tipo !== 'novidade').map((d: any) => d.rota)];
 
 async function semViolacoes(page: Page, rotulo: string) {
   const r = await new AxeBuilder({ page }).withTags(TAGS).analyze();
@@ -30,7 +30,7 @@ test.describe('Acessibilidade WCAG 2.2 AA em todas as páginas', () => {
 
 test.describe('Estrutura global', () => {
   test('logo do Itaú, nome do site e botão Início em todas as páginas', async ({ page }) => {
-    for (const rota of ['/', '/qualidade/quality-baseline', '/especificacoes', '/sobre/piloto']) {
+    for (const rota of ['/', '/qualidade/quality-baseline', '/indicadores/tecnologia', '/sobre/piloto']) {
       await page.goto(rota);
       const banner = page.getByRole('banner');
       await expect(banner.getByRole('link', { name: /Itaú.*COE Quality IA.*página inicial/ })).toBeVisible();
@@ -60,7 +60,7 @@ test.describe('Estrutura global', () => {
 });
 
 test.describe('Menus expansíveis', () => {
-  for (const menu of ['Inteligência Artificial', 'Qualidade', 'Indicadores', 'Especificações', 'Sobre o COE']) {
+  for (const menu of ['Inteligência Artificial', 'Qualidade', 'Indicadores', 'Sobre o COE']) {
     test(`${menu}: abre, mostra opções e fecha com Esc devolvendo o foco`, async ({ page }) => {
       await page.goto('/');
       const botao = page.getByRole('navigation', { name: 'Principal' }).getByRole('button', { name: menu });
@@ -109,44 +109,18 @@ test.describe('Menus expansíveis', () => {
 });
 
 test.describe('Página inicial', () => {
-  test('dashboard de uso com números, variação em texto e tabela do gráfico', async ({ page }) => {
+  test('apresenta o COE, as novidades e os atalhos, sem o painel de uso', async ({ page }) => {
     await page.goto('/');
-    const uso = page.getByRole('region', { name: 'Uso da solução' });
-    await expect(uso.getByText('Pessoas que acessaram')).toBeVisible();
-    await expect(uso.getByText(/subiu \d+% em relação ao período anterior/).first()).toBeVisible();
-    await expect(uso.getByRole('img', { name: /Acessos por semana/ })).toBeVisible();
-    await uso.getByText('Ver os dados do gráfico em tabela').click();
-    await expect(uso.getByRole('cell', { name: '251' })).toBeVisible();
-    await expect(uso.getByRole('rowheader', { name: 'Squad Pesquisa Web' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'COE Quality IA' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2 })).toHaveText(['Indicadores que precisam de atenção', 'Novidades', 'Por onde começar']);
+    await expect(page.getByRole('region', { name: 'Uso da solução' })).toHaveCount(0);
   });
 
   test('novidades listam as últimas publicações', async ({ page }) => {
     await page.goto('/');
     const novidades = page.getByRole('region', { name: 'Novidades' });
-    await expect(novidades.getByRole('link', { name: 'CoE Test Framework' })).toBeVisible();
+    await expect(novidades.getByRole('link', { name: 'CoE Test Framework 1.0.1 para download' })).toBeVisible();
     await expect(novidades.getByRole('link', { name: 'COE Quality IA no ar' })).toBeVisible();
-  });
-});
-
-test.describe('Especificações (publicadas via Git)', () => {
-  test('busca filtra e anuncia a quantidade', async ({ page }) => {
-    await page.goto('/especificacoes');
-    await page.getByLabel('Buscar por título ou texto').fill('framework');
-    await expect(page.getByRole('status')).toHaveText('1 especificação encontrada');
-    await page.getByLabel('Buscar por título ou texto').fill('nada-disso-existe');
-    await expect(page.getByText(/Nenhuma especificação corresponde/)).toBeVisible();
-  });
-
-  test('detalhe mostra metadados e o caminho de alteração por pull request', async ({ page }) => {
-    await page.goto('/especificacoes/coe-test-framework');
-    await expect(page.getByRole('heading', { level: 1, name: 'CoE Test Framework' })).toBeVisible();
-    await expect(page.locator('dt', { hasText: 'Versão' })).toBeVisible();
-    await expect(page.getByRole('link', { name: /Propor alteração/ })).toHaveAttribute('href', /github\.com\/weliveiracruz\/coe-quality-ia\/edit\/main\/public\/conteudo\/especificacoes\/coe-test-framework\.md/);
-  });
-
-  test('como publicar oferece criar o arquivo no repositório', async ({ page }) => {
-    await page.goto('/especificacoes/publicar');
-    await expect(page.getByRole('link', { name: /Criar especificação no repositório/ })).toHaveAttribute('href', /\/new\/main\/public\/conteudo\/especificacoes\?filename=nova-especificacao\.md/);
   });
 });
 
@@ -158,7 +132,7 @@ test('página inexistente oferece voltar ao início', async ({ page }) => {
 
 test('reflow a 320 px sem rolagem horizontal', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 });
-  for (const rota of ['/', '/sobre/piloto', '/especificacoes']) {
+  for (const rota of ['/', '/sobre/piloto', '/indicadores/tecnologia']) {
     await page.goto(rota);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     const rola = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);

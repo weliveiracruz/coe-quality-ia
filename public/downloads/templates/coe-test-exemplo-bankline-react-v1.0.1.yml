@@ -1,0 +1,35 @@
+# Exemplo: squad web (React) da pesquisa no Bankline e na WebView, mirando ouro.
+versao: 1
+framework_versao: v1
+squad:
+  nome: Squad Pesquisa Web
+  nivel_alvo: ouro
+produto: modulo-pesquisa
+stack: react
+canais: [web, webview]
+camadas:
+  e2e: true
+  visual: true
+  mutacao: true
+  performance: true
+  resiliencia: true
+  qualidade_dados: true
+  smoke_producao: true
+perfis_web: [bankline]
+ambientes:
+  hml:
+    url: https://bankline-hml.exemplo.itau
+    auth: usuario-teste
+slos:
+  p95_ms: 600
+catalogo:
+  implementacoes:
+    web: [coe-tests/unitario, coe-tests/e2e/tests]
+    webview: [coe-tests/e2e/tests/webview]
+iuclick:
+  habilitado: true
+  projeto: PESQ
+  mover_tasks: true
+  status:
+    aprovado: "Homologado"
+    reprovado: "Ajustes"

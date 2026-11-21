@@ -12,4 +12,4 @@ O catálogo reúne a definição e a documentação das métricas acompanhadas p
 - **Métricas de confiabilidade:** SLIs, SLOs e error budget dos serviços.
 
 ## Como uma métrica entra no catálogo
-Cada métrica entra por especificação publicada, com nome, fórmula, fonte, elegibilidade, periodicidade, responsável e limiares de alerta.
+Cada métrica entra por pull request no repositório do COE, com nome, fórmula, fonte, elegibilidade, periodicidade, responsável e limiares de alerta.

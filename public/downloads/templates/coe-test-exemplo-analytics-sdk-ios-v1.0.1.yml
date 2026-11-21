@@ -1,0 +1,16 @@
+# Exemplo: SDK de Analytics no iOS. Só a suíte de bump do FullStory (Dependabot dispara).
+versao: 1
+framework_versao: v1
+squad:
+  nome: Squad Indicadores de Experiência
+  nivel_alvo: bronze
+produto: analytics-sdk
+stack: ios-swiftui
+canais: [ios]
+camadas:
+  acessibilidade: false
+  integracao: false
+  privacidade: true
+mobile:
+  alvo_pr: emulador
+  alvo_release: emulador

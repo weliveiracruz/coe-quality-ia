@@ -1,0 +1,232 @@
+# Catálogo de cenários do site COE Quality IA.
+# Cada ID (CEN-SITE-000) aparece no nome do teste que o implementa: é assim que o pipeline mede a paridade.
+# Os cenários valem para o canal web (desktop e celular).
+produto: site-coe-quality-ia
+cenarios:
+  - id: CEN-SITE-001
+    titulo: Página inicial apresenta o COE e os atalhos por área
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado que a pessoa abriu a página inicial
+      Quando a página carrega
+      Então aparecem a apresentação do COE, as Novidades e os atalhos por área
+      E não aparece o painel de uso da solução
+
+  - id: CEN-SITE-002
+    titulo: Novidades levam ao conteúdo publicado
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado que há novidades publicadas
+      Quando a pessoa abre a página inicial
+      Então as publicações mais recentes aparecem em Novidades
+      E cada uma leva a uma página que existe
+
+  - id: CEN-SITE-003
+    titulo: Menus do topo abrem e fecham pelo teclado
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado que a pessoa está em qualquer página
+      Quando ela abre um menu do topo com Enter
+      Então as opções do menu aparecem
+      E Esc fecha o menu e devolve o foco ao botão
+
+  - id: CEN-SITE-004
+    titulo: Item de menu leva à página e marca a página atual
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado que a pessoa abriu o menu Qualidade
+      Quando ela escolhe um item
+      Então a página do item abre com o título correto
+      E o item fica marcado como página atual para leitores de tela
+
+  - id: CEN-SITE-005
+    titulo: Logo e botão Início voltam para a página inicial
+    prioridade: media
+    canais: [web]
+    gherkin: |
+      Dado que a pessoa está numa página interna
+      Quando ela usa o botão Início
+      Então a página inicial abre
+
+  - id: CEN-SITE-006
+    titulo: Pular para o conteúdo é o primeiro link do teclado
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado que a pessoa abriu o site
+      Quando ela pressiona Tab pela primeira vez
+      Então o foco vai para "Pular para o conteúdo"
+      E Enter leva o foco ao título principal
+
+  - id: CEN-SITE-007
+    titulo: Título da aba identifica a página
+    prioridade: media
+    canais: [web]
+    gherkin: |
+      Dado que a pessoa navega entre páginas
+      Quando uma página abre
+      Então o título da aba mostra o nome da página e do site
+
+  - id: CEN-SITE-008
+    titulo: Nenhuma página com violação grave de acessibilidade
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado o índice de todas as páginas publicadas
+      Quando cada página é auditada com axe nas regras WCAG 2.2 AA
+      Então não há violação crítica nem séria
+
+  - id: CEN-SITE-009
+    titulo: Reflow no celular sem rolagem horizontal
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado uma tela de 320 px de largura
+      Quando a pessoa abre as páginas principais
+      Então o conteúdo cabe na largura sem rolagem horizontal
+
+  - id: CEN-SITE-010
+    titulo: Conteúdo em Markdown sem metadados aparentes
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado um arquivo de conteúdo com bloco de metadados, inclusive com fim de linha do Windows
+      Quando a página é exibida
+      Então aparecem o título, o resumo e o corpo
+      E o bloco de metadados não aparece como texto
+
+  - id: CEN-SITE-011
+    titulo: Tabelas e códigos largos rolam e recebem foco
+    prioridade: media
+    canais: [web]
+    gherkin: |
+      Dado uma página com tabela ou bloco de código mais largo que a tela
+      Quando a pessoa usa só o teclado
+      Então a área que rola recebe foco e pode ser rolada
+
+  - id: CEN-SITE-014
+    titulo: Endereço inexistente
+    prioridade: media
+    canais: [web]
+    gherkin: |
+      Dado um endereço que não existe no site
+      Quando a pessoa abre o endereço
+      Então aparece "Página não encontrada" com link para o início
+
+  - id: CEN-SITE-015
+    titulo: Download do CoE Test Framework
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado que a pessoa abriu a página do CoE Test Framework
+      Quando ela escolhe baixar o pacote
+      Então o arquivo .zip da versão anunciada é baixado
+
+  - id: CEN-SITE-016
+    titulo: Todos os templates disponíveis para download
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado que a pessoa abriu a página Templates
+      Quando ela escolhe qualquer template
+      Então o arquivo existe e é baixado com a versão no nome
+
+  - id: CEN-SITE-017
+    titulo: Nenhum item de menu quebrado
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado os menus do topo
+      Quando cada item é aberto
+      Então todos levam a uma página publicada, sem "Página não encontrada"
+
+  - id: CEN-SITE-018
+    titulo: Navegação não envia dado pessoal nem chama terceiros
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado que a pessoa navega pelo site em modo demonstração
+      Quando ela percorre as páginas principais
+      Então nenhum evento de analytics leva dado pessoal
+      E nenhuma requisição sai para domínios de terceiros
+
+  - id: CEN-SITE-019
+    titulo: Sem regressão visual nas páginas principais
+    prioridade: media
+    canais: [web]
+    gherkin: |
+      Dado as imagens de referência aprovadas
+      Quando as páginas principais são capturadas de novo
+      Então a diferença fica abaixo do limite do perfil
+
+  - id: CEN-SITE-020
+    titulo: Modo demonstração sem login
+    prioridade: media
+    canais: [web]
+    gherkin: |
+      Dado que o site não tem o login do Azure configurado
+      Quando a pessoa abre a página inicial
+      Então o site abre sem pedir login
+      E a saudação é para Visitante
+
+  - id: CEN-SITE-021
+    titulo: Indicadores de tecnologia do último mês fechado
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado os scores de Cyber, Confiabilidade, Resiliência, CMDB e Dados do último mês fechado
+      Quando a pessoa abre Indicadores de tecnologia
+      Então vê o resultado da comunidade, da RT e de cada squad da RT
+      E cada resultado tem a faixa escrita: Dentro da meta (90% ou mais), Atenção (85% a 89,9%), Alerta (80% a 84,9%) ou Crítico (abaixo de 80%)
+
+  - id: CEN-SITE-022
+    titulo: Cada score leva ao dashboard oficial
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado um score de uma unidade
+      Quando a pessoa escolhe o resultado
+      Então abre o dashboard oficial do score, filtrado pela unidade e pelo mês, com o analítico de pendências
+
+  - id: CEN-SITE-023
+    titulo: Página inicial mostra os indicadores abaixo de 90%
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado scores abaixo de 90% no último mês fechado
+      Quando a pessoa abre a página inicial
+      Então esses indicadores aparecem em "Indicadores que precisam de atenção", do menor para o maior
+      E os que estão em 90% ou mais não aparecem
+
+  - id: CEN-SITE-024
+    titulo: Catálogo de skills
+    prioridade: media
+    canais: [web]
+    gherkin: |
+      Dado as skills criadas pelo COE e as reutilizadas de outros times
+      Quando a pessoa filtra por origem ou busca um termo
+      Então a lista é filtrada e a quantidade é anunciada
+
+  - id: CEN-SITE-025
+    titulo: Catálogo de MCPs
+    prioridade: media
+    canais: [web]
+    gherkin: |
+      Dado os MCPs catalogados pelo COE
+      Quando a pessoa filtra por situação ou busca um termo
+      Então a lista é filtrada e a quantidade é anunciada
+      E cada MCP mostra para que serve e como obter acesso
+
+  - id: CEN-SITE-026
+    titulo: Pedido ao COE
+    prioridade: alta
+    canais: [web]
+    gherkin: |
+      Dado que a pessoa quer pedir uma missão, um MCP ou uma Skill
+      Quando ela envia o formulário com campos faltando
+      Então um resumo de erros recebe o foco, com links para cada campo
+      E quando ela corrige os campos o pedido fica pronto para ser enviado no repositório do COE

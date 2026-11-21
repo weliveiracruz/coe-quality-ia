@@ -10,4 +10,4 @@ resumo: Critérios, regras e limiares para os alertas operacionais.
 - **AI Engineer:** automatiza o enriquecimento e a priorização dos alertas.
 - **Squads:** instrumentação, manutenção de alertas e resposta operacional.
 
-Um limiar novo ou alterado entra por especificação publicada, com justificativa e baseline.
+Um limiar novo ou alterado entra por pull request no repositório do COE, com justificativa e baseline.

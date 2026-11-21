@@ -1,0 +1,42 @@
+# Exemplo: squad do módulo de pesquisa no Android (Compose), nível prata.
+versao: 1
+framework_versao: v1
+squad:
+  nome: Squad Pesquisa Mobile
+  pm: pm.pesquisa@itau
+  tech_lead: tl.pesquisa@itau
+  nivel_alvo: prata
+produto: modulo-pesquisa
+stack: android-compose
+canais: [android, webview]
+camadas:
+  e2e: true
+  rede_instavel: true
+  device_farm: true
+  mutacao: false
+ambientes:
+  hml:
+    url: https://pesquisa-hml.exemplo.itau
+    bff_url: https://bff-pesquisa-hml.exemplo.itau
+    auth: token-servico
+mobile:
+  alvo_pr: emulador
+  alvo_release: device_farm
+  device_farm:
+    provedor: generico
+    matriz:
+      android: ["Pixel 6@34", "Galaxy A14@33", "Moto G22@31", "Pixel 2@26"]
+quality_gate:
+  cobertura_minima_codigo_novo: 85   # mais rigoroso que o CoE (80)
+catalogo:
+  implementacoes:
+    android: [coe-tests/unitario, coe-tests/ui, coe-tests/transversais]
+    webview: [coe-tests/webview]
+iuclick:
+  habilitado: true
+  projeto: PESQ
+  mover_tasks: true
+  status:
+    em_teste: "Em teste"
+    aprovado: "Pronto para release"
+    reprovado: "Em desenvolvimento"

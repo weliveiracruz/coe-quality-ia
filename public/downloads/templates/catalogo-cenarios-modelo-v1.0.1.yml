@@ -1,0 +1,19 @@
+# MODELO de catálogo de cenários de um produto (CoE Test Framework v1.0.1).
+# 1. Copie para products/<produto>/catalogo/cenarios.yml no framework, ou deixe no repositório da squad e aponte
+#    "catalogo.arquivo" no coe-test.yml (o "coe-test init" já faz isso para produto novo).
+# 2. O PM escreve os cenários a partir das histórias do IU Click; o Tech Lead implementa em cada canal.
+# 3. Use o ID do cenário (CEN-<PROD>-000) no nome do teste: é assim que o pipeline calcula a paridade entre canais.
+# Os cenários transversais (acessibilidade, LGPD, rede, token) já estão em suites/transversais/catalogo-transversal.yml.
+# Exemplo completo: products/modulo-pesquisa/catalogo/cenarios.yml.
+produto: <id-do-produto>          # minúsculas e hífen, igual ao "produto" do coe-test.yml
+cenarios:
+  - id: CEN-<PROD>-001             # sigla do produto em maiúsculas e número sequencial
+    titulo: <nome curto, na linguagem do cliente>
+    historia: <PROJETO-123>        # ID da história no IU Click
+    prioridade: alta               # alta | media | baixa
+    canais: [android, ios, webview, web]
+    gherkin: |
+      Dado <situação inicial>
+      Quando <ação do cliente>
+      Então <resultado esperado que dá para verificar>
+      E <outro resultado, se houver>

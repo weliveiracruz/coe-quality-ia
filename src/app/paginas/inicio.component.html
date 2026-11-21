@@ -7,81 +7,38 @@
     @if (auth.usuario(); as u) { <p class="ola">Boas-vindas, {{ u.nome }}.</p> }
   </section>
 
-  <!-- ===================== DASHBOARD DE USO ===================== -->
-  <section aria-labelledby="titulo-uso" class="bloco">
-    <h2 id="titulo-uso">Uso da solução</h2>
-    @if (uso(); as u) {
-      <p class="nota">Últimos {{ u.periodo_dias }} dias, comparados aos {{ u.periodo_dias }} dias anteriores. Atualizado em {{ data(u.atualizado_em) }}.</p>
-      @if (u.exemplo) { <p class="aviso">Dados de exemplo. Em produção, o pipeline gera este painel a partir do login (Azure) e do JSON de métricas do CoE Test Framework.</p> }
-
-      <ul class="indicadores">
-        @for (i of u.indicadores; track i.id) {
-          <li class="cartao indicador">
-            <span class="valor">{{ num(i.valor) }}</span>
-            <span class="rotulo">{{ i.rotulo }}</span>
-            <span class="variacao" [class]="'variacao variacao--' + variacao(i).sentido">
-              @if (variacao(i).sentido !== 'igual') { <app-icone [nome]="variacao(i).sentido" [tamanho]="16" /> }
-              {{ variacao(i).texto }}
-            </span>
-          </li>
-        }
-      </ul>
-
-      <div class="grade-dupla">
-        <figure class="cartao grafico">
-          <figcaption><h3>Acessos por semana</h3></figcaption>
-          <svg viewBox="0 0 560 220" role="img" [attr.aria-label]="resumoGrafico()" class="barras">
-            <line x1="40" y1="190" x2="550" y2="190" class="eixo" />
-            @for (s of u.acessos_semana; track s.semana; let idx = $index) {
-              <g>
-                <rect [attr.x]="52 + idx * (480 / u.acessos_semana.length)" [attr.y]="190 - alturaBarra(s.acessos)"
-                      [attr.width]="(480 / u.acessos_semana.length) - 16" [attr.height]="alturaBarra(s.acessos)" rx="4" class="barra" />
-                <text [attr.x]="52 + idx * (480 / u.acessos_semana.length) + ((480 / u.acessos_semana.length) - 16) / 2"
-                      [attr.y]="182 - alturaBarra(s.acessos)" text-anchor="middle" class="rotulo-valor">{{ num(s.acessos) }}</text>
-                <text [attr.x]="52 + idx * (480 / u.acessos_semana.length) + ((480 / u.acessos_semana.length) - 16) / 2"
-                      y="210" text-anchor="middle" class="rotulo-eixo">{{ dia(s.semana) }}</text>
-              </g>
-            }
-          </svg>
-          <details>
-            <summary>Ver os dados do gráfico em tabela</summary>
-            <table>
-              <caption class="sr-only">Acessos por semana</caption>
-              <thead><tr><th scope="col">Semana iniciada em</th><th scope="col" class="numero">Acessos</th></tr></thead>
-              <tbody>
-                @for (s of u.acessos_semana; track s.semana) {
-                  <tr><td>{{ dia(s.semana) }}</td><td class="numero">{{ num(s.acessos) }}</td></tr>
-                }
-              </tbody>
-            </table>
-          </details>
-        </figure>
-
-        <div class="cartao">
-          <h3 id="titulo-squads">Uso por squad</h3>
-          <div class="rolavel" role="region" aria-labelledby="titulo-squads" tabindex="0">
-            <table>
-              <thead>
-                <tr><th scope="col">Squad</th><th scope="col">Área</th><th scope="col" class="numero">Acessos</th><th scope="col">Nível no framework</th></tr>
-              </thead>
-              <tbody>
-                @for (s of u.squads; track s.squad) {
-                  <tr>
-                    <th scope="row">{{ s.squad }}</th>
-                    <td>{{ s.area }}</td>
-                    <td class="numero">{{ num(s.acessos) }}</td>
-                    <td>{{ s.nivel }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
+  <!-- ===================== INDICADORES QUE PRECISAM DE ATENÇÃO ===================== -->
+  <section aria-labelledby="titulo-atencao" class="bloco">
+    <h2 id="titulo-atencao">Indicadores que precisam de atenção</h2>
+    @if (tecnologia(); as d) {
+      <p class="nota">Scores de tecnologia abaixo de 90% em {{ mes(d.mes_referencia) }}, o último mês fechado, do menor para o maior.</p>
+      @if (atencao().length) {
+        <div class="cartao tabela-atencao rolavel" role="region" aria-labelledby="titulo-atencao" tabindex="0">
+          <table>
+            <caption class="sr-only">Indicadores abaixo de 90% em {{ mes(d.mes_referencia) }}</caption>
+            <thead>
+              <tr><th scope="col">Unidade</th><th scope="col">Score</th><th scope="col">Resultado</th><th scope="col">Analítico</th></tr>
+            </thead>
+            <tbody>
+              @for (i of atencao(); track i.unidade.id + i.score.id) {
+                <tr>
+                  <th scope="row">{{ i.unidade.nome }}</th>
+                  <td>{{ i.score.nome }}</td>
+                  <td><strong class="valor">{{ pct(i.valor) }}</strong> <span [class]="'faixa faixa--' + i.faixa.id">{{ i.faixa.rotulo }}</span></td>
+                  <td><a [href]="i.link">Ver pendências<span class="sr-only"> do {{ i.score.nome }} da {{ i.unidade.nome }}</span></a></td>
+                </tr>
+              }
+            </tbody>
+          </table>
         </div>
-      </div>
-    } @else if (erroUso()) {
-      <p class="aviso">Os dados de uso não estão disponíveis agora. Tente de novo mais tarde.</p>
+      } @else {
+        <p class="cartao">Todos os scores de tecnologia estão em 90% ou mais em {{ mes(d.mes_referencia) }}.</p>
+      }
+      <a routerLink="/indicadores/tecnologia" class="botao botao--secundario">Ver todos os indicadores de tecnologia</a>
+    } @else if (erroTecnologia()) {
+      <p class="aviso">Os indicadores de tecnologia não estão disponíveis agora. Tente de novo mais tarde.</p>
     } @else {
-      <p role="status">Carregando dados de uso…</p>
+      <p role="status">Carregando indicadores…</p>
     }
   </section>
 
@@ -93,7 +50,6 @@
         <li class="cartao novidade">
           <div class="cabeca">
             <span [class]="'tag tag--' + n.area">{{ rotuloArea(n.area) }}</span>
-            <span class="tipo">{{ n.tipo === 'especificacao' ? 'Especificação' : 'Novidade' }}</span>
             <span class="data">{{ data(n.data) }}</span>
           </div>
           <h3><a [routerLink]="n.rota">{{ n.titulo }}</a></h3>
@@ -103,7 +59,6 @@
         <li>Nenhuma novidade publicada ainda.</li>
       }
     </ul>
-    <a routerLink="/especificacoes" class="botao botao--secundario">Ver todas as especificações</a>
   </section>
 
   <!-- ===================== ATALHOS ===================== -->
@@ -123,6 +78,6 @@
         <p>Metodologia, catálogo de métricas, qualidade de dados, SLIs e SLOs.</p>
       </li>
     </ul>
-    <a routerLink="/sobre/missoes" class="botao">Solicitar missão com o COE</a>
+    <a routerLink="/sobre/fale-com-o-coe" class="botao">Solicitar missão com o COE</a>
   </section>
 </div>

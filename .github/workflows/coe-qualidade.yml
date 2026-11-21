@@ -1,0 +1,21 @@
+# Gerado por coe-test init. A lógica fica no workflow reutilizável do CoE; a squad só chama.
+name: Qualidade CoE
+on:
+  pull_request:
+  push:
+    branches: [main, "release/**"]
+  schedule:
+    - cron: "5 11 * * *"   # 08:05 em Brasília: janela abriu, reexecuta PRs com testes de ambiente pendentes
+  workflow_dispatch:
+    inputs:
+      momento:
+        description: "pr | release (fechamento do pacote para produção)"
+        default: pr
+
+jobs:
+  qualidade:
+    uses: itau-coe/coe-test-framework/.github/workflows/coe-pipeline.yml@v1
+    with:
+      stack: angular
+      momento: ${{ github.event_name == 'schedule' && 'agendado' || startsWith(github.ref_name, 'release/') && 'release' || inputs.momento || 'pr' }}
+    secrets: inherit

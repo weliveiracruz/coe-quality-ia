@@ -15,4 +15,4 @@ Relatório periódico e curto com os **principais riscos de qualidade da RT**.
 - tendências
 - recomendações
 
-Ele dá visibilidade executiva para o valor do COE. As edições do Quality Radar são publicadas em Especificações e aparecem em Novidades.
+Ele dá visibilidade executiva para o valor do COE. As edições do Quality Radar são publicadas no site e aparecem em Novidades.

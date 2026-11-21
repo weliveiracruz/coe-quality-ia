@@ -1,0 +1,39 @@
+# Configuração de testes do site COE Quality IA — único arquivo que a squad edita.
+# Gerado por "coe-test init --stack angular" (CoE Test Framework v1.0.1) e ajustado para o site.
+# Referência: docs/guia-adocao.md do framework | Schema: core/schemas/coe-test.schema.json
+versao: 1
+framework_versao: v1
+squad:
+  nome: COE Quality IA
+  tech_lead: Wellington Cruz
+  nivel_alvo: prata
+produto: site-coe-quality-ia
+stack: angular
+canais:
+  - web
+camadas:
+  e2e: true
+  visual: true
+  mutacao: true
+# O site é estático: E2E, acessibilidade e visual rodam no runner, contra o build servido localmente
+# (ambiente "local" do perfil coe-tests/perfis/coe-quality-ia.yml), sem esperar a janela de homologação.
+estagios:
+  e2e: { precisa_ambiente: false }
+  acessibilidade: { precisa_ambiente: false }
+  visual: { precisa_ambiente: false }
+ambientes:
+  hml:
+    url: http://localhost:4300
+    auth: nenhuma
+perfis_web:
+  - coe-quality-ia
+catalogo:
+  # Enquanto o produto não tem pasta em products/ no framework, o catálogo fica no próprio repositório.
+  arquivo: coe-tests/catalogo/cenarios.yml
+  paridade_bloqueante: true
+  implementacoes:
+    web:
+      - coe-tests
+iuclick:
+  habilitado: false
+  projeto: ""

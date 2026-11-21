@@ -85,12 +85,22 @@ a:hover { text-decoration-thickness: 2px; }
   border-radius: var(--ids-radius-sm);
 }
 
+/* Faixa de um score: cor + nome da faixa */
+.faixa {
+  display: inline-flex; align-items: center; gap: var(--ids-space-1); padding: 0 var(--ids-space-2);
+  border-radius: var(--ids-radius-sm); font-weight: var(--ids-font-weight-bold); font-size: var(--ids-font-size-sm); line-height: 1.6rem; white-space: nowrap;
+}
+.faixa--verde { background: var(--ids-color-faixa-verde); color: var(--ids-color-on-faixa-verde); }
+.faixa--amarela { background: var(--ids-color-faixa-amarela); color: var(--ids-color-on-faixa-amarela); }
+.faixa--laranja { background: var(--ids-color-faixa-laranja); color: var(--ids-color-on-faixa-laranja); }
+.faixa--vermelha { background: var(--ids-color-faixa-vermelha); color: var(--ids-color-on-faixa-vermelha); }
+
 table { border-collapse: collapse; width: 100%; }
 caption { text-align: left; font-weight: var(--ids-font-weight-bold); padding-bottom: var(--ids-space-2); }
 th, td { text-align: left; padding: var(--ids-space-2) var(--ids-space-3); border-bottom: var(--ids-border-width) solid var(--ids-color-border-default); vertical-align: top; }
 th { color: var(--ids-color-text-secondary); font-size: var(--ids-font-size-sm); }
 td.numero, th.numero { text-align: right; font-variant-numeric: tabular-nums; }
-.rolavel { overflow-x: auto; }
+.rolavel { overflow-x: auto; position: relative; } /* contém textos sr-only (position: absolute) das tabelas */
 
 /* Conteúdo vindo de Markdown */
 .markdown blockquote {

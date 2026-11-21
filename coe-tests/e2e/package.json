@@ -1,0 +1,5 @@
+{
+  "_comentario": "Os specs e o config do Playwright do CoE usam __dirname: esta pasta é CommonJS mesmo quando o projeto é \"type\": \"module\" (ex.: Vite).",
+  "private": true,
+  "type": "commonjs"
+}

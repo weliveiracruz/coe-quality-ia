@@ -1,0 +1,24 @@
+{
+  "_comentario": "Dependências de teste do CoE para Angular (17+). Mescle em devDependencies do projeto.",
+  "scripts": {
+    "test:coe": "jest --config coe-tests/jest.config.ts",
+    "test:mutacao": "stryker run coe-tests/stryker.conf.json"
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "^8.7.1",
+    "@stryker-mutator/jest-runner": "^8.7.1",
+    "@stryker-mutator/typescript-checker": "^8.7.1",
+    "@testing-library/angular": "^17.3.2",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.14",
+    "@types/jest-axe": "^3.5.9",
+    "@types/node": "^22.10.0",
+    "jest": "^29.7.0",
+    "jest-axe": "^9.0.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-junit": "^16.0.0",
+    "jest-preset-angular": "^14.4.2",
+    "ts-node": "^10.9.2"
+  }
+}
