@@ -1,9 +1,13 @@
 // Menus do topo x conteúdo publicado: nenhum item de menu pode apontar para uma página que não existe.
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { MENUS, ROTAS_DE_COMPONENTE, menuPorId } from '../../src/app/navegacao';
 
-const indice = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../public/conteudo/indice.json'), 'utf8'));
+// O índice é gerado no build (fora do Git). Num checkout limpo, como no CI e no sandbox do Stryker, ele é gerado aqui.
+const ARQ_INDICE = path.resolve(__dirname, '../../public/conteudo/indice.json');
+if (!fs.existsSync(ARQ_INDICE)) execFileSync(process.execPath, [path.resolve(__dirname, '../../scripts/gerar-indice.mjs')], { stdio: 'ignore' });
+const indice = JSON.parse(fs.readFileSync(ARQ_INDICE, 'utf8'));
 const rotas = new Set<string>(indice.documentos.filter((d: { tipo: string }) => d.tipo !== 'novidade').map((d: { rota: string }) => d.rota));
 for (const r of ROTAS_DE_COMPONENTE) rotas.add(r);
 
