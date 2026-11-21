@@ -31,8 +31,13 @@ jobs:
     name: Unitário, E2E, acessibilidade, visual, privacidade e gates
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write   # só para gravar as referências da regressão visual na branch, quando faltam
     steps:
       - uses: actions/checkout@v4
+        with:
+          # no PR, testa o último commit da branch (e não o merge), para poder gravar as referências visuais nela
+          ref: ${{ github.head_ref || github.ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -60,10 +65,38 @@ jobs:
       - name: Navegador do Playwright
         run: npx playwright install --with-deps chromium
 
+      # As referências da regressão visual nascem no CI (mesmo navegador e mesmas fontes de todas as execuções).
+      # Sem referências na branch, ou com "atualizar_snapshots", elas são geradas aqui e gravadas na branch.
+      - name: Referências da regressão visual
+        id: referencias
+        run: |
+          if [ "${{ inputs.atualizar_snapshots }}" = "true" ] || ! ls coe-tests/e2e/tests/__snapshots__/*/visual.spec.ts/*.png >/dev/null 2>&1; then
+            echo "gerar=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "gerar=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Gerar as referências visuais
+        if: steps.referencias.outputs.gerar == 'true'
+        run: npx playwright test -c coe-tests/e2e/playwright.config.ts tests/visual.spec.ts --update-snapshots
+
+      - name: Gravar as referências visuais na branch
+        if: steps.referencias.outputs.gerar == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        env:
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add coe-tests/e2e/tests/__snapshots__
+          if git diff --cached --quiet; then echo "Referências sem mudança."; exit 0; fi
+          git commit -m "test: referências da regressão visual geradas no CI"
+          git push origin "HEAD:${BRANCH}"
+          echo "::notice title=Referências visuais::Geradas no CI e gravadas na branch. Revise as imagens no pull request."
+
       - name: E2E, acessibilidade, visual e privacidade (Playwright)
         env:
           CI: "true"
-        run: npx playwright test -c coe-tests/e2e/playwright.config.ts ${{ inputs.atualizar_snapshots && '--update-snapshots' || '' }}
+        run: npx playwright test -c coe-tests/e2e/playwright.config.ts
 
       - name: Paridade, privacidade, gates e métricas do CoE
         if: always()

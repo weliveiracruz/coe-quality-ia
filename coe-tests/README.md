@@ -26,4 +26,4 @@ coe-test metricas --junit resultados --gates artefatos/gates.json --momento pr -
 ```
 
 ## Regressão visual
-As imagens de referência em `e2e/tests/__snapshots__/` foram geradas no Linux com o Chrome, como no runner do GitHub. No Windows a fonte é desenhada de outro jeito, então os 4 testes visuais falham localmente. Rode-os no CI, ou gere referências locais com `--update-snapshots` sem fazer commit delas.
+As imagens de referência ficam em `e2e/tests/__snapshots__/` e são geradas no CI, com o mesmo navegador e as mesmas fontes de todas as execuções. Quando não há referências na branch, o workflow **Qualidade CoE** gera as imagens e grava na própria branch com um commit do GitHub Actions. Para aprovar uma mudança visual, rode o workflow manualmente com "Regerar as imagens de referência". Não gere as referências na sua máquina: elas não batem com as do CI.
