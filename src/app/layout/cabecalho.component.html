@@ -37,13 +37,11 @@
             </button>
             <div class="painel" [id]="'painel-' + menu.id" [hidden]="aberto() !== menu.id">
               <ul>
-                @if (menu.id !== 'especificacoes') {
-                  <li>
-                    <a [routerLink]="'/' + menu.id" routerLinkActive="link--atual" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" class="link-painel">
-                      <span class="link-titulo">Visão geral de {{ menu.rotulo }}</span>
-                    </a>
-                  </li>
-                }
+                <li>
+                  <a [routerLink]="'/' + menu.id" routerLinkActive="link--atual" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" class="link-painel">
+                    <span class="link-titulo">Visão geral de {{ menu.rotulo }}</span>
+                  </a>
+                </li>
                 @for (item of menu.itens; track item.rota) {
                   <li>
                     <a [routerLink]="item.rota" routerLinkActive="link--atual" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" class="link-painel">

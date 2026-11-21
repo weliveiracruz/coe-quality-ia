@@ -1,0 +1,138 @@
+# Qualidade CoE do site, com o CoE Test Framework publicado no próprio site (public/downloads/).
+# Quando o framework estiver em itau-coe/coe-test-framework, este arquivo pode voltar a ser o gerado por
+# "coe-test init" (uses: itau-coe/coe-test-framework/.github/workflows/coe-pipeline.yml@v1).
+name: Qualidade CoE
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      atualizar_snapshots:
+        description: "Regerar as imagens de referência da regressão visual (mudança visual aprovada)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qualidade-coe-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  COE_VERSAO: v1.0.1
+  COE_ARTEFATOS: ${{ github.workspace }}/artefatos
+  COE_RESULTADOS: ${{ github.workspace }}/resultados
+
+jobs:
+  qualidade:
+    name: Unitário, E2E, acessibilidade, visual, privacidade e gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write   # só para gravar as referências da regressão visual na branch, quando faltam
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # no PR, testa o último commit da branch (e não o merge), para poder gravar as referências visuais nela
+          ref: ${{ github.head_ref || github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Preparar o CoE Test Framework (${{ env.COE_VERSAO }})
+        run: |
+          unzip -q "public/downloads/coe-test-framework-${COE_VERSAO}.zip" -d .coe
+          npm ci --prefix .coe/coe-test-framework --omit=dev --no-audit --no-fund
+          echo "COE=node ${GITHUB_WORKSPACE}/.coe/coe-test-framework/core/cli/bin/coe-test.js" >> "$GITHUB_ENV"
+
+      - name: Configuração, catálogo e plano
+        run: |
+          $COE validate
+          $COE catalogo validar
+          $COE plano --momento pr
+
+      - name: Unitário (Jest, Testing Library e axe) com cobertura
+        run: npm run test:coe
+
+      - name: Build (índice de conteúdo e verificação de tokens)
+        run: npm run build
+
+      - name: Navegador do Playwright
+        run: npx playwright install --with-deps chromium
+
+      # As referências da regressão visual nascem no CI (mesmo navegador e mesmas fontes de todas as execuções).
+      # Sem referências na branch, ou com "atualizar_snapshots", elas são geradas aqui e gravadas na branch.
+      - name: Referências da regressão visual
+        id: referencias
+        run: |
+          if [ "${{ inputs.atualizar_snapshots }}" = "true" ] || ! ls coe-tests/e2e/tests/__snapshots__/*/visual.spec.ts/*.png >/dev/null 2>&1; then
+            echo "gerar=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "gerar=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Gerar as referências visuais
+        if: steps.referencias.outputs.gerar == 'true'
+        run: npx playwright test -c coe-tests/e2e/playwright.config.ts tests/visual.spec.ts --update-snapshots
+
+      - name: Gravar as referências visuais na branch
+        if: steps.referencias.outputs.gerar == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        env:
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add coe-tests/e2e/tests/__snapshots__
+          if git diff --cached --quiet; then echo "Referências sem mudança."; exit 0; fi
+          git commit -m "test: referências da regressão visual geradas no CI"
+          git push origin "HEAD:${BRANCH}"
+          echo "::notice title=Referências visuais::Geradas no CI e gravadas na branch. Revise as imagens no pull request."
+
+      - name: E2E, acessibilidade, visual e privacidade (Playwright)
+        env:
+          CI: "true"
+        run: npx playwright test -c coe-tests/e2e/playwright.config.ts
+
+      - name: Paridade, privacidade, gates e métricas do CoE
+        if: always()
+        run: |
+          $COE catalogo paridade --resultados resultados --saida artefatos/paridade.json
+          $COE privacidade --entrada artefatos/eventos --saida artefatos/privacidade.json
+          $COE gates --artefatos artefatos --saida artefatos/gates.json
+          $COE metricas --junit resultados --gates artefatos/gates.json --momento pr --paridade artefatos/paridade.json --saida artefatos/coe-metricas.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qualidade-coe
+          path: |
+            resultados/
+            artefatos/
+            coe-tests/e2e/test-results/
+            coe-tests/e2e/tests/__snapshots__/
+          if-no-files-found: ignore
+
+  mutacao:
+    name: Mutação (Stryker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Mutação nos arquivos com teste unitário
+        run: npm run test:mutacao
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mutacao
+          path: artefatos/mutacao.*
+          if-no-files-found: ignore

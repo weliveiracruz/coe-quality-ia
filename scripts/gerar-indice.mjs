@@ -4,7 +4,6 @@
 //
 // Pastas:
 //   public/conteudo/paginas/<area>/<pagina>.md  -> rota /<area>/<pagina>   (área "geral": rota no frontmatter)
-//   public/conteudo/especificacoes/<slug>.md    -> rota /especificacoes/<slug>
 //   public/conteudo/novidades/<arquivo>.md      -> rota no frontmatter (para onde a novidade leva)
 import fs from 'node:fs';
 import path from 'node:path';
@@ -14,20 +13,15 @@ import YAML from 'yaml';
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = path.join(RAIZ, 'public/conteudo');
 const AREAS = ['ia', 'qualidade', 'indicadores', 'geral'];
-const STATUS = ['Rascunho', 'Em revisão', 'Publicada', 'Substituída'];
 const erros = [];
 
 function ler(caminhoRel) {
-  const bruto = fs.readFileSync(path.join(BASE, caminhoRel), 'utf8');
+  const bruto = fs.readFileSync(path.join(BASE, caminhoRel), 'utf8').replace(/^\uFEFF/, '').replace(/\r\n/g, '\n');
   const m = bruto.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!m) { erros.push(`${caminhoRel}: falta o bloco de metadados (--- ... ---) no início`); return null; }
   let meta;
   try { meta = YAML.parse(m[1]); } catch (e) { erros.push(`${caminhoRel}: metadados inválidos (${e.message})`); return null; }
   return { meta, corpo: m[2] };
-}
-
-function textoPuro(md) {
-  return md.replace(/```[\s\S]*?```/g, ' ').replace(/[#>*_`|\-\[\]()]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 4000);
 }
 
 function exigir(meta, campos, arq) {
@@ -55,25 +49,13 @@ for (const arq of listar('paginas')) {
   });
 }
 
-for (const arq of listar('especificacoes')) {
-  const r = ler(arq); if (!r) continue;
-  exigir(r.meta, ['titulo', 'area', 'resumo', 'versao', 'data', 'status', 'responsavel'], arq);
-  if (r.meta.status && !STATUS.includes(r.meta.status)) erros.push(`${arq}: status "${r.meta.status}" inválido (use ${STATUS.join(', ')})`);
-  if (r.meta.status !== 'Publicada' && r.meta.status !== 'Substituída') continue; // rascunho fica fora do site
-  documentos.push({
-    tipo: 'especificacao', caminho: arq, rota: `/especificacoes/${path.basename(arq, '.md')}`,
-    titulo: r.meta.titulo, area: r.meta.area, resumo: r.meta.resumo, data: String(r.meta.data),
-    versao: String(r.meta.versao), status: r.meta.status, responsavel: r.meta.responsavel, texto: textoPuro(r.corpo),
-  });
-}
-
 for (const arq of listar('novidades')) {
   const r = ler(arq); if (!r) continue;
   exigir(r.meta, ['titulo', 'area', 'resumo', 'data', 'rota'], arq);
   documentos.push({ tipo: 'novidade', caminho: arq, rota: r.meta.rota, titulo: r.meta.titulo, area: r.meta.area, resumo: r.meta.resumo, data: String(r.meta.data) });
 }
 
-// rotas de páginas e especificações não podem se repetir
+// rotas de páginas não podem se repetir
 const vistas = new Map();
 for (const d of documentos.filter((x) => x.tipo !== 'novidade')) {
   if (vistas.has(d.rota)) erros.push(`rota duplicada ${d.rota}: ${vistas.get(d.rota)} e ${d.caminho}`);
@@ -82,7 +64,9 @@ for (const d of documentos.filter((x) => x.tipo !== 'novidade')) {
 // novidade precisa apontar para algo que existe
 for (const n of documentos.filter((x) => x.tipo === 'novidade')) {
   const interna = !/^https?:/.test(n.rota);
-  const existe = vistas.has(n.rota) || ['/', '/especificacoes', '/inteligencia-artificial', '/qualidade', '/indicadores', '/sobre'].includes(n.rota);
+  // páginas por componente (src/app/navegacao.ts: ROTAS_DE_COMPONENTE) também podem ser destino de novidade
+  const existe = vistas.has(n.rota) || ['/', '/inteligencia-artificial', '/qualidade', '/indicadores', '/sobre',
+    '/indicadores/tecnologia', '/inteligencia-artificial/skills', '/inteligencia-artificial/mcps', '/sobre/fale-com-o-coe'].includes(n.rota);
   if (interna && !existe) erros.push(`${n.caminho}: rota "${n.rota}" não existe no site`);
 }
 

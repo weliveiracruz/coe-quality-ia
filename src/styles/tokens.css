@@ -51,6 +51,17 @@
   --ids-color-area-indicadores: #004480;
   --ids-color-area-indicadores-subtle: #ecf4f9;
 
+  /* Faixas dos scores de tecnologia (sempre com o nome da faixa escrito, nunca só a cor).
+     Texto sobre a faixa: verde 5,43:1 · amarela 9,92:1 · laranja 5,34:1 · vermelha 6,54:1 */
+  --ids-color-faixa-verde: #16794b;
+  --ids-color-on-faixa-verde: #ffffff;
+  --ids-color-faixa-amarela: #f5c400;
+  --ids-color-on-faixa-amarela: #231f20;
+  --ids-color-faixa-laranja: #ec7000;
+  --ids-color-on-faixa-laranja: #231f20;
+  --ids-color-faixa-vermelha: #b3261e;
+  --ids-color-on-faixa-vermelha: #ffffff;
+
   /* Foco */
   --ids-focus-color: #004480;
   --ids-focus-width: 3px;

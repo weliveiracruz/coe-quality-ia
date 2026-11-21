@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stryker-mutator/stryker-js/master/packages/core/schema/stryker-schema.json",
+  "_comentario": "tsconfig.app.json: o tsconfig.json da raiz inclui os testes E2E. Sem checker de TypeScript e com coverageAnalysis off: o checker recusa arquivos fora do grafo do app e a análise perTest derruba o processo com zone.js no Node 22 (ERR_INTERNAL_ASSERTION).",
+  "testRunner": "jest",
+  "jest": {
+    "configFile": "coe-tests/jest.config.ts"
+  },
+  "checkers": [],
+  "coverageAnalysis": "off",
+  "tsconfigFile": "tsconfig.app.json",
+  "mutate": [
+    "src/app/servicos/conteudo.service.ts",
+    "src/app/layout/cabecalho.component.ts",
+    "src/app/navegacao.ts"
+  ],
+  "reporters": [
+    "clear-text",
+    "json",
+    "html"
+  ],
+  "jsonReporter": {
+    "fileName": "artefatos/mutacao.json"
+  },
+  "htmlReporter": {
+    "fileName": "artefatos/mutacao.html"
+  },
+  "thresholds": {
+    "high": 80,
+    "low": 60,
+    "break": 60
+  },
+  "_comentario_site": "Site: a mutação cobre o código com teste unitário (serviço de conteúdo, cabeçalho e menus). O resto do site é exercido pelo E2E."
+}

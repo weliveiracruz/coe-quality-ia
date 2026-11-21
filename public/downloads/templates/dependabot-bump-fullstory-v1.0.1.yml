@@ -1,0 +1,24 @@
+# Copie para .github/dependabot.yml no repositório do SDK de Analytics.
+# Agrupa FullStory e o BoM do Firebase: cada PR de bump dispara a suíte analytics-bump.
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule: { interval: weekly, day: monday, time: "08:30", timezone: America/Sao_Paulo }
+    labels: [bump-fullstory, coe-analytics-bump]
+    groups:
+      fullstory:
+        patterns: ["com.fullstory*", "com.fullstory:*"]
+      firebase:
+        patterns: ["com.google.firebase:firebase-bom"]
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: swift
+    directory: "/"
+    schedule: { interval: weekly, day: monday, time: "08:30", timezone: America/Sao_Paulo }
+    labels: [bump-fullstory, coe-analytics-bump]
+    groups:
+      fullstory:
+        patterns: ["*fullstory*"]
+      firebase:
+        patterns: ["*firebase-ios-sdk*"]

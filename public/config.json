@@ -6,8 +6,7 @@
   },
   "repositorio": {
     "url": "https://github.com/weliveiracruz/coe-quality-ia",
-    "ramo": "main",
-    "pastaEspecificacoes": "public/conteudo/especificacoes"
+    "ramo": "main"
   },
   "contatoCoe": {
     "rotulo": "Canal do COE Quality IA",

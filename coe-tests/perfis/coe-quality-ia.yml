@@ -1,0 +1,25 @@
+# Perfil da plataforma web do site COE Quality IA (a partir de platforms/web/perfis/_modelo.yml do CoE Test Framework).
+id: coe-quality-ia
+nome: COE Quality IA
+frameworks: [angular]
+# O site é estático: os testes rodam contra o build de produção servido no próprio runner (npm run build antes).
+# "local" é o ambiente do pipeline (COE_AMBIENTE=local); "hml" é o padrão quando roda na máquina.
+ambientes:
+  local: &build-local
+    url: http://localhost:4300
+    rota_pesquisa: /
+    servidor: npx http-server dist/coe-quality-ia/browser -p 4300 -s --proxy http://localhost:4300?
+  hml: *build-local
+autenticacao:
+  tipo: nenhuma                  # sem azure.clientId em public/config.json o site roda em modo demonstração
+navegadores: [chromium]
+viewport_padrao: { width: 1366, height: 768 }
+viewports_extras:
+  - { nome: celular, width: 375, height: 812 }
+analytics:
+  ga4: ["google-analytics.com", "googletagmanager.com"]
+  fullstory: ["fullstory.com"]
+  bff: ["/api/"]
+visual:
+  limiar_diferenca_pct: 0.2
+  mascarar: []

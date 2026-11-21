@@ -21,10 +21,9 @@ import { AuthService } from '../servicos/auth.service';
             @if (config.valor.contatoCoe.url) {
               <li><a [href]="config.valor.contatoCoe.url">Fale com o COE ({{ config.valor.contatoCoe.rotulo }})</a></li>
             } @else {
-              <li><a routerLink="/sobre/missoes">Fale com o COE</a></li>
+              <li><a routerLink="/sobre/fale-com-o-coe">Fale com o COE</a></li>
             }
             <li><a routerLink="/acessibilidade">Declaração de acessibilidade</a></li>
-            <li><a routerLink="/especificacoes/publicar">Como publicar uma especificação</a></li>
           </ul>
         </nav>
       </div>

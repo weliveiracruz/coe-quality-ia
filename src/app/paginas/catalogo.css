@@ -1,0 +1,30 @@
+.resumo { font-size: var(--ids-font-size-lg); color: var(--ids-color-text-secondary); max-width: 60rem; }
+.filtros { display: flex; flex-wrap: wrap; gap: var(--ids-space-4); margin: var(--ids-space-5) 0 var(--ids-space-3); align-items: flex-end; }
+.campo { display: flex; flex-direction: column; gap: var(--ids-space-1); flex: 1 1 16rem; }
+label { font-weight: var(--ids-font-weight-bold); }
+input, select {
+  font: inherit; min-height: var(--ids-size-target); width: 100%; color: var(--ids-color-text-primary);
+  border: var(--ids-border-width) solid var(--ids-color-border-strong); border-radius: var(--ids-radius-md);
+  padding: 0 var(--ids-space-3); background: var(--ids-color-surface-default);
+}
+.contagem { color: var(--ids-color-text-secondary); }
+.lista { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); gap: var(--ids-space-4); }
+.item { display: flex; flex-direction: column; gap: var(--ids-space-2); }
+.item h2 { font-size: var(--ids-font-size-lg); margin: 0; }
+.item p { margin: 0; }
+.etiquetas { display: flex; flex-wrap: wrap; gap: var(--ids-space-2); }
+.etiqueta {
+  display: inline-block; padding: 0 var(--ids-space-2); border-radius: var(--ids-radius-sm); font-size: var(--ids-font-size-sm);
+  font-weight: var(--ids-font-weight-bold); line-height: 1.6rem; border: var(--ids-border-width) solid currentColor;
+}
+.etiqueta--coe { color: var(--ids-color-brand-primary-text); background: var(--ids-color-brand-primary-subtle); }
+.etiqueta--externa { color: var(--ids-color-brand-secondary); background: var(--ids-color-brand-secondary-subtle); }
+.etiqueta--disponivel { color: var(--ids-color-feedback-success); background: var(--ids-color-feedback-success-subtle); }
+.etiqueta--avaliacao { color: var(--ids-color-feedback-warning); background: var(--ids-color-feedback-warning-subtle); }
+.etiqueta--categoria { color: var(--ids-color-text-secondary); background: var(--ids-color-surface-muted); }
+dl { margin: 0; display: grid; gap: var(--ids-space-2); }
+dt { font-weight: var(--ids-font-weight-bold); font-size: var(--ids-font-size-sm); }
+dd { margin: 0; }
+.item a { display: inline-flex; align-items: center; min-height: 24px; }
+.vazio { padding: var(--ids-space-5); background: var(--ids-color-surface-default); border-radius: var(--ids-radius-md); grid-column: 1 / -1; }
+.pedido { margin-top: var(--ids-space-6); }

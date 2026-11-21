@@ -1,0 +1,141 @@
+{
+  "atualizado_em": "2026-11-20",
+  "skills": [
+    {
+      "id": "cenarios-iuclick",
+      "nome": "Cenários a partir da história",
+      "origem": "coe",
+      "categoria": "Qualidade",
+      "descricao": "Lê a história no IU Click e o catálogo do produto e propõe cenários \"dado, quando, então\" com a numeração certa. O PM aprova antes de gravar.",
+      "quando_usar": "Refinamento de histórias, antes de a squad começar a implementar.",
+      "como_usar": "Peça os cenários de uma história informando o ID (ex.: PESQ-123). Exige o MCP do IU Click.",
+      "referencia": "core/agente/prompt-cenarios.md no CoE Test Framework"
+    },
+    {
+      "id": "esqueleto-teste",
+      "nome": "Esqueleto de teste por cenário",
+      "origem": "coe",
+      "categoria": "Qualidade",
+      "descricao": "Gera o teste do cenário na stack da squad (Android, iOS, BFF Kotlin, API .NET, Angular ou React), com o ID do cenário no nome.",
+      "quando_usar": "Ao implementar um cenário novo do catálogo, para manter a paridade entre canais.",
+      "como_usar": "Informe o ID do cenário (ex.: CEN-PESQ-004) e a stack. Equivale ao comando coe-test esqueleto.",
+      "referencia": "CoE Test Framework"
+    },
+    {
+      "id": "revisao-wcag",
+      "nome": "Revisão de acessibilidade WCAG 2.2 AA",
+      "origem": "coe",
+      "categoria": "Acessibilidade",
+      "descricao": "Revisa tela, componente ou pull request contra a WCAG 2.2 nível AA e aponta o critério, o impacto e a correção sugerida.",
+      "quando_usar": "Antes de abrir o pull request de uma tela nova ou de uma mudança visual.",
+      "como_usar": "Envie o código do componente, a URL de homologação ou uma captura de tela.",
+      "referencia": "Definition of Done do CoE"
+    },
+    {
+      "id": "apresentacoes-acessiveis",
+      "nome": "Apresentações HTML acessíveis",
+      "origem": "coe",
+      "categoria": "Comunicação",
+      "descricao": "Transforma PDF, DOCX, Markdown ou planilha em apresentação HTML navegável por teclado e leitor de tela, sem resumir o conteúdo.",
+      "quando_usar": "Material de cerimônias, treinamentos e eventos que precisa ser acessível.",
+      "como_usar": "Envie o arquivo de origem e peça a apresentação acessível.",
+      "referencia": "Catálogo de skills da organização"
+    },
+    {
+      "id": "testes-instaveis",
+      "nome": "Análise de testes instáveis",
+      "origem": "coe",
+      "categoria": "Qualidade",
+      "descricao": "Cruza o histórico do JUnit e do relatório do pipeline para achar a causa provável de testes que passam só na segunda tentativa.",
+      "quando_usar": "Quando o relatório do CoE marca testes instáveis na squad.",
+      "como_usar": "Envie o coe-metricas.json e os resultados JUnit da execução.",
+      "referencia": "docs/playbook-testes-instaveis.md no CoE Test Framework"
+    },
+    {
+      "id": "bump-fullstory",
+      "nome": "Revisão do bump do FullStory",
+      "origem": "coe",
+      "categoria": "Qualidade",
+      "descricao": "Lê a tabela de comparação do bump do SDK de Analytics e explica o que mudou na API pública, na inicialização e na convivência com o Firebase.",
+      "quando_usar": "Pull requests do Dependabot com o label coe-analytics-bump.",
+      "como_usar": "Envie o link do pull request ou o arquivo bump.md gerado pelo pipeline.",
+      "referencia": "docs/playbook-bump-fullstory.md no CoE Test Framework"
+    },
+    {
+      "id": "historia-pm",
+      "nome": "História no modelo do CoE",
+      "origem": "coe",
+      "categoria": "Produto",
+      "descricao": "Ajuda o PM a escrever a história com cenários verificáveis e responde às perguntas guiadas: offline, sessão expirada, leitor de tela, fonte ampliada, dado sensível e erro do serviço.",
+      "quando_usar": "Ao criar ou refinar histórias no IU Click.",
+      "como_usar": "Descreva a mudança para o cliente e os canais envolvidos.",
+      "referencia": "docs/modelo-historia-pm.md no CoE Test Framework"
+    },
+    {
+      "id": "docx",
+      "nome": "Documentos Word (docx)",
+      "origem": "reutilizada",
+      "time_origem": "Anthropic (skills públicas)",
+      "categoria": "Documentação",
+      "descricao": "Cria e edita documentos Word com estilos, tabelas, comentários e controle de alterações.",
+      "quando_usar": "Relatórios, atas e documentos que circulam fora do Git.",
+      "como_usar": "Peça o documento no formato Word ou envie o .docx para edição.",
+      "referencia": "https://github.com/anthropics/skills"
+    },
+    {
+      "id": "xlsx",
+      "nome": "Planilhas Excel (xlsx)",
+      "origem": "reutilizada",
+      "time_origem": "Anthropic (skills públicas)",
+      "categoria": "Dados",
+      "descricao": "Cria, limpa e analisa planilhas com fórmulas, formatação e gráficos.",
+      "quando_usar": "Consolidação de resultados de testes, indicadores e levantamentos.",
+      "como_usar": "Envie a planilha ou descreva a tabela que precisa.",
+      "referencia": "https://github.com/anthropics/skills"
+    },
+    {
+      "id": "pptx",
+      "nome": "Apresentações PowerPoint (pptx)",
+      "origem": "reutilizada",
+      "time_origem": "Anthropic (skills públicas)",
+      "categoria": "Comunicação",
+      "descricao": "Cria e edita apresentações PowerPoint, inclusive a partir de modelos existentes.",
+      "quando_usar": "Quando a apresentação precisa sair no formato PowerPoint.",
+      "como_usar": "Peça a apresentação em PowerPoint ou envie o .pptx para edição.",
+      "referencia": "https://github.com/anthropics/skills"
+    },
+    {
+      "id": "pdf",
+      "nome": "PDF",
+      "origem": "reutilizada",
+      "time_origem": "Anthropic (skills públicas)",
+      "categoria": "Documentação",
+      "descricao": "Extrai texto e tabelas, junta, divide e preenche formulários em PDF.",
+      "quando_usar": "Leitura de laudos, contratos e relatórios em PDF.",
+      "como_usar": "Envie o PDF e diga o que precisa extrair ou gerar.",
+      "referencia": "https://github.com/anthropics/skills"
+    },
+    {
+      "id": "webapp-testing",
+      "nome": "Testes de aplicação web",
+      "origem": "reutilizada",
+      "time_origem": "Anthropic (skills públicas)",
+      "categoria": "Qualidade",
+      "descricao": "Usa o Playwright para navegar e testar uma aplicação web local, com capturas de tela e logs do navegador.",
+      "quando_usar": "Exploração rápida de uma tela antes de escrever o teste E2E definitivo.",
+      "como_usar": "Informe o comando que sobe a aplicação e o fluxo a verificar.",
+      "referencia": "https://github.com/anthropics/skills"
+    },
+    {
+      "id": "skill-creator",
+      "nome": "Criador de skills",
+      "origem": "reutilizada",
+      "time_origem": "Anthropic (skills públicas)",
+      "categoria": "IA",
+      "descricao": "Ajuda a criar, testar e melhorar uma skill nova antes de pedir a inclusão no catálogo.",
+      "quando_usar": "Quando a squad quer transformar um processo repetitivo em skill.",
+      "como_usar": "Descreva o processo e dê exemplos de entrada e saída esperadas.",
+      "referencia": "https://github.com/anthropics/skills"
+    }
+  ]
+}

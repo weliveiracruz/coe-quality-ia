@@ -1,0 +1,28 @@
+{
+  "mes_referencia": "2026-10",
+  "mes_anterior": "2026-09",
+  "atualizado_em": "2026-11-05",
+  "scores": [
+    { "id": "cyber", "nome": "Score de Cyber", "descricao": "Vulnerabilidades em aberto, correções de segurança e conformidade de configuração dos ativos.", "dashboard": "https://indicadores-tecnologia.itau.corp/score-cyber" },
+    { "id": "confiabilidade", "nome": "Score de Confiabilidade", "descricao": "Disponibilidade, incidentes e cumprimento dos SLOs dos serviços.", "dashboard": "https://indicadores-tecnologia.itau.corp/score-confiabilidade" },
+    { "id": "resiliencia", "nome": "Score de Resiliência", "descricao": "Planos de contingência, testes de recuperação e tolerância a falhas.", "dashboard": "https://indicadores-tecnologia.itau.corp/score-resiliencia" },
+    { "id": "cmdb", "nome": "Score CMDB", "descricao": "Ativos cadastrados, relacionamentos e responsáveis atualizados na CMDB.", "dashboard": "https://indicadores-tecnologia.itau.corp/score-cmdb" },
+    { "id": "dados", "nome": "Score de Dados", "descricao": "Qualidade, catalogação e governança dos dados produzidos e consumidos.", "dashboard": "https://indicadores-tecnologia.itau.corp/score-dados" }
+  ],
+  "unidades": [
+    { "id": "comunidade-experiencia-design", "nome": "Comunidade Experiência e Design", "tipo": "comunidade",
+      "valores": { "cyber": [94.1, 92.8], "confiabilidade": [92.3, 91.9], "resiliencia": [90.6, 89.8], "cmdb": [95.4, 95.0], "dados": [91.8, 90.9] } },
+    { "id": "rt-indicadores-experiencia", "nome": "RT Indicadores de Experiência", "tipo": "rt", "pai": "comunidade-experiencia-design",
+      "valores": { "cyber": [91.6, 90.2], "confiabilidade": [89.7, 90.4], "resiliencia": [87.9, 86.5], "cmdb": [93.1, 92.2], "dados": [90.1, 89.3] } },
+    { "id": "squad-pesquisa-sdk", "nome": "Squad Pesquisa SDK", "tipo": "squad", "pai": "rt-indicadores-experiencia",
+      "valores": { "cyber": [88.4, 86.0], "confiabilidade": [86.9, 88.2], "resiliencia": [84.3, 82.7], "cmdb": [96.0, 95.1], "dados": [92.4, 91.0] } },
+    { "id": "squad-pesquisa-core", "nome": "Squad Pesquisa Core", "tipo": "squad", "pai": "rt-indicadores-experiencia",
+      "valores": { "cyber": [95.2, 94.7], "confiabilidade": [91.4, 90.6], "resiliencia": [90.5, 89.9], "cmdb": [94.8, 94.0], "dados": [89.6, 88.8] } },
+    { "id": "squad-cx-raios", "nome": "Squad CX RAIOS", "tipo": "squad", "pai": "rt-indicadores-experiencia",
+      "valores": { "cyber": [92.7, 93.1], "confiabilidade": [87.2, 85.9], "resiliencia": [82.6, 84.1], "cmdb": [78.4, 80.6], "dados": [91.0, 90.2] } },
+    { "id": "squad-cx-analytics", "nome": "Squad CX Analytics", "tipo": "squad", "pai": "rt-indicadores-experiencia",
+      "valores": { "cyber": [90.8, 89.5], "confiabilidade": [93.8, 93.0], "resiliencia": [91.2, 90.4], "cmdb": [97.2, 96.8], "dados": [85.7, 87.9] } },
+    { "id": "squad-medicao-apuracao", "nome": "Squad Medição e Apuração", "tipo": "squad", "pai": "rt-indicadores-experiencia",
+      "valores": { "cyber": [93.5, 92.0], "confiabilidade": [90.2, 89.1], "resiliencia": [88.1, 87.0], "cmdb": [92.6, 91.7], "dados": [79.2, 81.5] } }
+  ]
+}

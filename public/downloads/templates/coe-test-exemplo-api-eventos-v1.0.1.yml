@@ -1,0 +1,27 @@
+# Exemplo: API de eventos .NET.
+versao: 1
+framework_versao: v1
+squad:
+  nome: Squad Plataforma Pesquisa
+  nivel_alvo: prata
+produto: api-eventos
+stack: dotnet-api
+camadas:
+  mutacao: true
+  performance: true
+  dast: true
+  qualidade_dados: true
+  acessibilidade: false
+estagios:
+  integracao: { precisa_ambiente: false }
+ambientes:
+  hml:
+    url: https://api-eventos-hml.exemplo.itau
+    auth: token-servico
+slos:
+  p95_ms: 150
+  taxa_erro_max: 0.001
+  rps_alvo: 1000
+catalogo:
+  implementacoes:
+    servico: [coe-tests]

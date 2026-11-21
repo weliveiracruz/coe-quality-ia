@@ -23,4 +23,4 @@ O COE entra temporariamente em problemas importantes, junto com a squad.
 - investigação que a squad sozinha não consegue priorizar
 
 ## Como pedir
-Abra uma especificação de missão (veja [Como publicar](/especificacoes/publicar)) ou fale com o COE pelo canal indicado no rodapé.
+Peça a missão em [Fale com o COE](/sobre/fale-com-o-coe). O pedido fica registrado no repositório do COE, onde o time acompanha e responde.
