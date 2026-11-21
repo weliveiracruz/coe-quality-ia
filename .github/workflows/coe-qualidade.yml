@@ -1,21 +1,105 @@
-# Gerado por coe-test init. A lógica fica no workflow reutilizável do CoE; a squad só chama.
+# Qualidade CoE do site, com o CoE Test Framework publicado no próprio site (public/downloads/).
+# Quando o framework estiver em itau-coe/coe-test-framework, este arquivo pode voltar a ser o gerado por
+# "coe-test init" (uses: itau-coe/coe-test-framework/.github/workflows/coe-pipeline.yml@v1).
 name: Qualidade CoE
+
 on:
   pull_request:
   push:
-    branches: [main, "release/**"]
-  schedule:
-    - cron: "5 11 * * *"   # 08:05 em Brasília: janela abriu, reexecuta PRs com testes de ambiente pendentes
+    branches: [main]
   workflow_dispatch:
     inputs:
-      momento:
-        description: "pr | release (fechamento do pacote para produção)"
-        default: pr
+      atualizar_snapshots:
+        description: "Regerar as imagens de referência da regressão visual (mudança visual aprovada)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qualidade-coe-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  COE_VERSAO: v1.0.1
+  COE_ARTEFATOS: ${{ github.workspace }}/artefatos
+  COE_RESULTADOS: ${{ github.workspace }}/resultados
 
 jobs:
   qualidade:
-    uses: itau-coe/coe-test-framework/.github/workflows/coe-pipeline.yml@v1
-    with:
-      stack: angular
-      momento: ${{ github.event_name == 'schedule' && 'agendado' || startsWith(github.ref_name, 'release/') && 'release' || inputs.momento || 'pr' }}
-    secrets: inherit
+    name: Unitário, E2E, acessibilidade, visual, privacidade e gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Preparar o CoE Test Framework (${{ env.COE_VERSAO }})
+        run: |
+          unzip -q "public/downloads/coe-test-framework-${COE_VERSAO}.zip" -d .coe
+          npm ci --prefix .coe/coe-test-framework --omit=dev --no-audit --no-fund
+          echo "COE=node ${GITHUB_WORKSPACE}/.coe/coe-test-framework/core/cli/bin/coe-test.js" >> "$GITHUB_ENV"
+
+      - name: Configuração, catálogo e plano
+        run: |
+          $COE validate
+          $COE catalogo validar
+          $COE plano --momento pr
+
+      - name: Unitário (Jest, Testing Library e axe) com cobertura
+        run: npm run test:coe
+
+      - name: Build (índice de conteúdo e verificação de tokens)
+        run: npm run build
+
+      - name: Navegador do Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E, acessibilidade, visual e privacidade (Playwright)
+        env:
+          CI: "true"
+        run: npx playwright test -c coe-tests/e2e/playwright.config.ts ${{ inputs.atualizar_snapshots && '--update-snapshots' || '' }}
+
+      - name: Paridade, privacidade, gates e métricas do CoE
+        if: always()
+        run: |
+          $COE catalogo paridade --resultados resultados --saida artefatos/paridade.json
+          $COE privacidade --entrada artefatos/eventos --saida artefatos/privacidade.json
+          $COE gates --artefatos artefatos --saida artefatos/gates.json
+          $COE metricas --junit resultados --gates artefatos/gates.json --momento pr --paridade artefatos/paridade.json --saida artefatos/coe-metricas.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qualidade-coe
+          path: |
+            resultados/
+            artefatos/
+            coe-tests/e2e/test-results/
+            coe-tests/e2e/tests/__snapshots__/
+          if-no-files-found: ignore
+
+  mutacao:
+    name: Mutação (Stryker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Mutação nos arquivos com teste unitário
+        run: npm run test:mutacao
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mutacao
+          path: artefatos/mutacao.*
+          if-no-files-found: ignore
