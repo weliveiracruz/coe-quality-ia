@@ -88,6 +88,7 @@ test.describe('Cabeçalho e menus', () => {
   });
 
   test('CEN-SITE-017 todos os itens de menu levam a uma página publicada', async ({ page }) => {
+    test.slow(); // visita todas as páginas dos menus (perto de 30) numa sequência só
     await page.goto('/');
     const nav = page.getByRole('navigation', { name: 'Principal' });
     const rotas = new Set<string>();
